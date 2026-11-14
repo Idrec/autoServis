@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: autoservice
+      POSTGRES_USER: autoservice
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-db-password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U autoservice"]
+      interval: 5s
+      retries: 10
+  backend:
+    build: ./backend
+    ports: ["127.0.0.1:8001:8000"]
+    environment:
+      DB_ENGINE: postgres
+      POSTGRES_DB: autoservice
+      POSTGRES_USER: autoservice
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-db-password}
+      POSTGRES_HOST: db
+      DEBUG: "True"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres_data:

@@ -1,0 +1,45 @@
+.sidebar > .brand,
+.sidebar > .workspace,
+.sidebar > .nav-label,
+.sidebar > .sidebar-bottom {
+  flex-shrink: 0;
+}
+
+.sidebar nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  align-content: start;
+  scrollbar-width: thin;
+  scrollbar-color: #48615f transparent;
+  overscroll-behavior: contain;
+}
+
+.sidebar-bottom {
+  padding-top: 18px;
+}
+
+@media (max-height: 850px) {
+  .sidebar-bottom .help {
+    display: none;
+  }
+
+  .sidebar .workspace {
+    margin: 22px 0 20px;
+  }
+}
+
+@media (max-height: 500px) {
+  .sidebar {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .sidebar .workspace {
+    display: none;
+  }
+
+  .sidebar > .nav-label {
+    margin-top: 16px;
+  }
+}

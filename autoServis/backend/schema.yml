@@ -1,0 +1,3739 @@
+openapi: 3.0.3
+info:
+  title: AutoService Manager API
+  version: 1.0.0
+paths:
+  /api/audit/:
+    get:
+      operationId: audit_list
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: string
+      - in: query
+        name: actor
+        schema:
+          type: integer
+      - in: query
+        name: entity
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - audit
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditList'
+          description: ''
+  /api/audit/{id}/:
+    get:
+      operationId: audit_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this audit event.
+        required: true
+      tags:
+      - audit
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Audit'
+          description: ''
+  /api/auth/change-password/:
+    post:
+      operationId: auth_change_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/auth/me/:
+    get:
+      operationId: auth_me_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: auth_me_partial_update
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/cars/:
+    get:
+      operationId: cars_list
+      parameters:
+      - in: query
+        name: owner
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - cars
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCarList'
+          description: ''
+    post:
+      operationId: cars_create
+      tags:
+      - cars
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CarRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CarRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+          description: ''
+  /api/cars/{id}/:
+    get:
+      operationId: cars_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this car.
+        required: true
+      tags:
+      - cars
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+          description: ''
+    put:
+      operationId: cars_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this car.
+        required: true
+      tags:
+      - cars
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CarRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CarRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+          description: ''
+    patch:
+      operationId: cars_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this car.
+        required: true
+      tags:
+      - cars
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCarRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCarRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCarRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+          description: ''
+    delete:
+      operationId: cars_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this car.
+        required: true
+      tags:
+      - cars
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/cars/{id}/history/:
+    get:
+      operationId: cars_history_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this car.
+        required: true
+      tags:
+      - cars
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+          description: ''
+  /api/dashboard/:
+    get:
+      operationId: dashboard_retrieve
+      tags:
+      - dashboard
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+  /api/orders/:
+    get:
+      operationId: orders_list
+      parameters:
+      - in: query
+        name: car
+        schema:
+          type: integer
+      - in: query
+        name: client
+        schema:
+          type: integer
+      - in: query
+        name: mechanic
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ASSIGNED
+          - CANCELLED
+          - COMPLETED
+          - DIAGNOSTICS
+          - IN_PROGRESS
+          - NEW
+          - PAID
+        description: |-
+          * `NEW` - Yangi
+          * `DIAGNOSTICS` - Diagnostika
+          * `ASSIGNED` - Biriktirilgan
+          * `IN_PROGRESS` - Jarayonda
+          * `COMPLETED` - Tugallangan
+          * `PAID` - To‘langan
+          * `CANCELLED` - Bekor qilingan
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderList'
+          description: ''
+    post:
+      operationId: orders_create
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/:
+    get:
+      operationId: orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+    patch:
+      operationId: orders_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+    delete:
+      operationId: orders_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/orders/{id}/{kind}/{item_id}/:
+    delete:
+      operationId: orders_remove_item
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      - in: path
+        name: item_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      - in: path
+        name: kind
+        schema:
+          type: string
+          pattern: ^services|parts$
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/orders/{id}/assign/:
+    post:
+      operationId: orders_assign_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssignRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/cancel/:
+    post:
+      operationId: orders_cancel_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CancelRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CancelRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/complete/:
+    post:
+      operationId: orders_complete_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/diagnose/:
+    post:
+      operationId: orders_diagnose_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiagnoseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DiagnoseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DiagnoseRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+    patch:
+      operationId: orders_diagnose_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDiagnoseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDiagnoseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDiagnoseRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/feedback/:
+    get:
+      operationId: orders_feedback_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+    post:
+      operationId: orders_feedback_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+    patch:
+      operationId: orders_feedback_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+  /api/orders/{id}/invoice/:
+    get:
+      operationId: orders_invoice_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+  /api/orders/{id}/part-requests/:
+    get:
+      operationId: orders_part_requests_list
+      parameters:
+      - in: query
+        name: car
+        schema:
+          type: integer
+      - in: query
+        name: client
+        schema:
+          type: integer
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      - in: query
+        name: mechanic
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ASSIGNED
+          - CANCELLED
+          - COMPLETED
+          - DIAGNOSTICS
+          - IN_PROGRESS
+          - NEW
+          - PAID
+        description: |-
+          * `NEW` - Yangi
+          * `DIAGNOSTICS` - Diagnostika
+          * `ASSIGNED` - Biriktirilgan
+          * `IN_PROGRESS` - Jarayonda
+          * `COMPLETED` - Tugallangan
+          * `PAID` - To‘langan
+          * `CANCELLED` - Bekor qilingan
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartRequisitionList'
+          description: ''
+    post:
+      operationId: orders_part_requests_create
+      parameters:
+      - in: query
+        name: car
+        schema:
+          type: integer
+      - in: query
+        name: client
+        schema:
+          type: integer
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      - in: query
+        name: mechanic
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ASSIGNED
+          - CANCELLED
+          - COMPLETED
+          - DIAGNOSTICS
+          - IN_PROGRESS
+          - NEW
+          - PAID
+        description: |-
+          * `NEW` - Yangi
+          * `DIAGNOSTICS` - Diagnostika
+          * `ASSIGNED` - Biriktirilgan
+          * `IN_PROGRESS` - Jarayonda
+          * `COMPLETED` - Tugallangan
+          * `PAID` - To‘langan
+          * `CANCELLED` - Bekor qilingan
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartRequisitionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PartRequisitionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PartRequisitionRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartRequisitionList'
+          description: ''
+  /api/orders/{id}/parts/:
+    post:
+      operationId: orders_parts_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPartRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddPartRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddPartRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/pay/:
+    post:
+      operationId: orders_pay_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PayRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PayRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/services/:
+    post:
+      operationId: orders_services_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddServiceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddServiceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddServiceRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/start/:
+    post:
+      operationId: orders_start_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/work-logs/:
+    get:
+      operationId: orders_work_logs_list
+      parameters:
+      - in: query
+        name: car
+        schema:
+          type: integer
+      - in: query
+        name: client
+        schema:
+          type: integer
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      - in: query
+        name: mechanic
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ASSIGNED
+          - CANCELLED
+          - COMPLETED
+          - DIAGNOSTICS
+          - IN_PROGRESS
+          - NEW
+          - PAID
+        description: |-
+          * `NEW` - Yangi
+          * `DIAGNOSTICS` - Diagnostika
+          * `ASSIGNED` - Biriktirilgan
+          * `IN_PROGRESS` - Jarayonda
+          * `COMPLETED` - Tugallangan
+          * `PAID` - To‘langan
+          * `CANCELLED` - Bekor qilingan
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWorkLogList'
+          description: ''
+    post:
+      operationId: orders_work_logs_create
+      parameters:
+      - in: query
+        name: car
+        schema:
+          type: integer
+      - in: query
+        name: client
+        schema:
+          type: integer
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      - in: query
+        name: mechanic
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ASSIGNED
+          - CANCELLED
+          - COMPLETED
+          - DIAGNOSTICS
+          - IN_PROGRESS
+          - NEW
+          - PAID
+        description: |-
+          * `NEW` - Yangi
+          * `DIAGNOSTICS` - Diagnostika
+          * `ASSIGNED` - Biriktirilgan
+          * `IN_PROGRESS` - Jarayonda
+          * `COMPLETED` - Tugallangan
+          * `PAID` - To‘langan
+          * `CANCELLED` - Bekor qilingan
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkLogRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkLogRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkLogRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWorkLogList'
+          description: ''
+  /api/orders/my/:
+    get:
+      operationId: orders_my_retrieve
+      tags:
+      - orders
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/part-requests/:
+    get:
+      operationId: part_requests_list
+      parameters:
+      - in: query
+        name: order
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - APPROVED
+          - PENDING
+          - REJECTED
+        description: |-
+          * `PENDING` - Kutilmoqda
+          * `APPROVED` - Tasdiqlangan
+          * `REJECTED` - Rad etilgan
+      tags:
+      - part-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartRequisitionList'
+          description: ''
+  /api/part-requests/{id}/:
+    get:
+      operationId: part_requests_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part request.
+        required: true
+      tags:
+      - part-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartRequisition'
+          description: ''
+  /api/part-requests/{id}/approve/:
+    post:
+      operationId: part_requests_approve_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part request.
+        required: true
+      tags:
+      - part-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartRequisition'
+          description: ''
+  /api/part-requests/{id}/reject/:
+    post:
+      operationId: part_requests_reject_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part request.
+        required: true
+      tags:
+      - part-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartRequisition'
+          description: ''
+  /api/parts/:
+    get:
+      operationId: parts_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - parts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartList'
+          description: ''
+    post:
+      operationId: parts_create
+      tags:
+      - parts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PartRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PartRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Part'
+          description: ''
+  /api/parts/{id}/:
+    get:
+      operationId: parts_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part.
+        required: true
+      tags:
+      - parts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Part'
+          description: ''
+    put:
+      operationId: parts_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part.
+        required: true
+      tags:
+      - parts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PartRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PartRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Part'
+          description: ''
+    patch:
+      operationId: parts_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part.
+        required: true
+      tags:
+      - parts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPartRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPartRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPartRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Part'
+          description: ''
+    delete:
+      operationId: parts_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part.
+        required: true
+      tags:
+      - parts
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/parts/{id}/restock/:
+    post:
+      operationId: parts_restock_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this part.
+        required: true
+      tags:
+      - parts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestockRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RestockRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RestockRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Part'
+          description: ''
+  /api/parts/low-stock/:
+    get:
+      operationId: parts_low_stock_retrieve
+      tags:
+      - parts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Part'
+          description: ''
+  /api/repair-requests/:
+    get:
+      operationId: repair_requests_list
+      parameters:
+      - in: query
+        name: client
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ACCEPTED
+          - PENDING
+          - REJECTED
+        description: |-
+          * `PENDING` - Kutilmoqda
+          * `ACCEPTED` - Qabul qilingan
+          * `REJECTED` - Rad etilgan
+      tags:
+      - repair-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRepairRequestList'
+          description: ''
+    post:
+      operationId: repair_requests_create
+      tags:
+      - repair-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepairRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RepairRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RepairRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepairRequest'
+          description: ''
+  /api/repair-requests/{id}/:
+    get:
+      operationId: repair_requests_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this repair request.
+        required: true
+      tags:
+      - repair-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepairRequest'
+          description: ''
+  /api/repair-requests/{id}/accept/:
+    post:
+      operationId: repair_requests_accept_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this repair request.
+        required: true
+      tags:
+      - repair-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestDecisionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestDecisionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RequestDecisionRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepairRequest'
+          description: ''
+  /api/repair-requests/{id}/reject/:
+    post:
+      operationId: repair_requests_reject_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this repair request.
+        required: true
+      tags:
+      - repair-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestDecisionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestDecisionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RequestDecisionRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepairRequest'
+          description: ''
+  /api/reports/{report_name}/:
+    get:
+      operationId: reports_retrieve
+      parameters:
+      - in: path
+        name: report_name
+        schema:
+          type: string
+        required: true
+      tags:
+      - reports
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                - type: array
+                  items:
+                    type: object
+          description: ''
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/services/:
+    get:
+      operationId: services_list
+      parameters:
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - services
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedServiceList'
+          description: ''
+    post:
+      operationId: services_create
+      tags:
+      - services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+  /api/services/{id}/:
+    get:
+      operationId: services_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+    put:
+      operationId: services_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+    patch:
+      operationId: services_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedServiceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedServiceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedServiceRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+    delete:
+      operationId: services_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/stock-movements/:
+    get:
+      operationId: stock_movements_list
+      parameters:
+      - in: query
+        name: order
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: part
+        schema:
+          type: integer
+      - in: query
+        name: reason
+        schema:
+          type: string
+          enum:
+          - correction
+          - purchase
+          - return
+          - usage
+        description: |-
+          * `purchase` - purchase
+          * `usage` - usage
+          * `return` - return
+          * `correction` - correction
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - stock-movements
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStockList'
+          description: ''
+  /api/stock-movements/{id}/:
+    get:
+      operationId: stock_movements_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this stock movement.
+        required: true
+      tags:
+      - stock-movements
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock'
+          description: ''
+  /api/users/:
+    get:
+      operationId: users_list
+      parameters:
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: role
+        schema:
+          type: string
+          enum:
+          - admin
+          - client
+          - manager
+          - mechanic
+        description: |-
+          * `admin` - Admin
+          * `manager` - Manager
+          * `mechanic` - Usta
+          * `client` - Mijoz
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    AddPartRequest:
+      type: object
+      properties:
+        part:
+          type: integer
+          minimum: 1
+        quantity:
+          type: integer
+          minimum: 1
+          default: 1
+      required:
+      - part
+    AddServiceRequest:
+      type: object
+      properties:
+        service:
+          type: integer
+          minimum: 1
+        quantity:
+          type: integer
+          minimum: 1
+          default: 1
+      required:
+      - service
+    AssignRequest:
+      type: object
+      properties:
+        mechanic:
+          type: integer
+          minimum: 1
+        diagnosis_notes:
+          type: string
+      required:
+      - mechanic
+    Audit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        actor_name:
+          type: string
+          readOnly: true
+          default: ''
+        action:
+          type: string
+          maxLength: 100
+        entity:
+          type: string
+          maxLength: 80
+        entity_id:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        detail:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        actor:
+          type: integer
+          nullable: true
+      required:
+      - action
+      - actor_name
+      - created_at
+      - entity
+      - entity_id
+      - id
+    CancelRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          minLength: 1
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner_name:
+          type: string
+          readOnly: true
+        brand:
+          type: string
+          maxLength: 80
+        model:
+          type: string
+          maxLength: 80
+        year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        plate_number:
+          type: string
+          maxLength: 20
+        vin:
+          type: string
+          maxLength: 30
+        mileage:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        owner:
+          type: integer
+      required:
+      - brand
+      - id
+      - model
+      - owner
+      - owner_name
+      - plate_number
+      - year
+    CarRequest:
+      type: object
+      properties:
+        brand:
+          type: string
+          minLength: 1
+          maxLength: 80
+        model:
+          type: string
+          minLength: 1
+          maxLength: 80
+        year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        plate_number:
+          type: string
+          minLength: 1
+          maxLength: 20
+        vin:
+          type: string
+          maxLength: 30
+        mileage:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        owner:
+          type: integer
+      required:
+      - brand
+      - model
+      - owner
+      - plate_number
+      - year
+    DiagnoseRequest:
+      type: object
+      properties:
+        diagnosis_notes:
+          type: string
+          minLength: 1
+      required:
+      - diagnosis_notes
+    History:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_name:
+          type: string
+        old_status:
+          type: string
+          maxLength: 20
+        new_status:
+          type: string
+          maxLength: 20
+        changed_at:
+          type: string
+          format: date-time
+          readOnly: true
+        comment:
+          type: string
+        order:
+          type: integer
+        changed_by:
+          type: integer
+      required:
+      - changed_at
+      - changed_by
+      - id
+      - new_status
+      - order
+      - user_name
+    HistoryRequest:
+      type: object
+      properties:
+        user_name:
+          type: string
+          minLength: 1
+        old_status:
+          type: string
+          maxLength: 20
+        new_status:
+          type: string
+          minLength: 1
+          maxLength: 20
+        comment:
+          type: string
+        order:
+          type: integer
+        changed_by:
+          type: integer
+      required:
+      - changed_by
+      - new_status
+      - order
+      - user_name
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        client_name:
+          type: string
+          readOnly: true
+        car_name:
+          type: string
+          readOnly: true
+        plate_number:
+          type: string
+          readOnly: true
+        mechanic_name:
+          type: string
+          readOnly: true
+          default: ''
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderService'
+          readOnly: true
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderPart'
+          readOnly: true
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+          readOnly: true
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/History'
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/OrderStatusEnum'
+          readOnly: true
+        problem_description:
+          type: string
+        diagnosis_notes:
+          type: string
+          readOnly: true
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        closed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        client:
+          type: integer
+        car:
+          type: integer
+        mechanic:
+          type: integer
+          readOnly: true
+          nullable: true
+        manager:
+          type: integer
+          readOnly: true
+      required:
+      - car
+      - car_name
+      - client
+      - client_name
+      - closed_at
+      - created_at
+      - diagnosis_notes
+      - history
+      - id
+      - manager
+      - mechanic
+      - mechanic_name
+      - parts
+      - payments
+      - plate_number
+      - problem_description
+      - services
+      - status
+      - total_price
+      - updated_at
+    OrderPart:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        part:
+          type: integer
+        name:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+      required:
+      - id
+      - name
+      - part
+      - price
+      - quantity
+    OrderPartRequest:
+      type: object
+      properties:
+        part:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+      required:
+      - name
+      - part
+      - price
+      - quantity
+    OrderRequest:
+      type: object
+      properties:
+        problem_description:
+          type: string
+          minLength: 1
+        client:
+          type: integer
+        car:
+          type: integer
+      required:
+      - car
+      - client
+      - problem_description
+    OrderService:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        service:
+          type: integer
+        name:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+      required:
+      - id
+      - name
+      - price
+      - service
+    OrderServiceRequest:
+      type: object
+      properties:
+        service:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+      required:
+      - name
+      - price
+      - service
+    OrderStatusEnum:
+      enum:
+      - NEW
+      - DIAGNOSTICS
+      - ASSIGNED
+      - IN_PROGRESS
+      - COMPLETED
+      - PAID
+      - CANCELLED
+      type: string
+      description: |-
+        * `NEW` - Yangi
+        * `DIAGNOSTICS` - Diagnostika
+        * `ASSIGNED` - Biriktirilgan
+        * `IN_PROGRESS` - Jarayonda
+        * `COMPLETED` - Tugallangan
+        * `PAID` - To‘langan
+        * `CANCELLED` - Bekor qilingan
+    PaginatedAuditList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Audit'
+    PaginatedCarList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Car'
+    PaginatedOrderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+    PaginatedPartList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Part'
+    PaginatedPartRequisitionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartRequisition'
+    PaginatedRepairRequestList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepairRequest'
+    PaginatedServiceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+    PaginatedStockList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stock'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PaginatedWorkLogList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkLog'
+    Part:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        name:
+          type: string
+          maxLength: 150
+        sku:
+          type: string
+          maxLength: 50
+        quantity:
+          type: integer
+          readOnly: true
+        min_quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        unit:
+          type: string
+          maxLength: 20
+      required:
+      - id
+      - name
+      - price
+      - quantity
+      - sku
+    PartRequest:
+      type: object
+      properties:
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        sku:
+          type: string
+          minLength: 1
+          maxLength: 50
+        min_quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        unit:
+          type: string
+          minLength: 1
+          maxLength: 20
+      required:
+      - name
+      - price
+      - sku
+    PartRequisition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        part_name:
+          type: string
+          readOnly: true
+        mechanic_name:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/PartRequisitionStatusEnum'
+          readOnly: true
+        reviewed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        order:
+          type: integer
+          readOnly: true
+        part:
+          type: integer
+        requested_by:
+          type: integer
+          readOnly: true
+        reviewed_by:
+          type: integer
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - id
+      - mechanic_name
+      - order
+      - part
+      - part_name
+      - quantity
+      - requested_by
+      - reviewed_at
+      - reviewed_by
+      - status
+    PartRequisitionRequest:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+        part:
+          type: integer
+      required:
+      - part
+      - quantity
+    PartRequisitionStatusEnum:
+      enum:
+      - PENDING
+      - APPROVED
+      - REJECTED
+      type: string
+      description: |-
+        * `PENDING` - Kutilmoqda
+        * `APPROVED` - Tasdiqlangan
+        * `REJECTED` - Rad etilgan
+    PasswordRequest:
+      type: object
+      properties:
+        old_password:
+          type: string
+          minLength: 1
+        new_password:
+          type: string
+          minLength: 1
+      required:
+      - new_password
+      - old_password
+    PatchedCarRequest:
+      type: object
+      properties:
+        brand:
+          type: string
+          minLength: 1
+          maxLength: 80
+        model:
+          type: string
+          minLength: 1
+          maxLength: 80
+        year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        plate_number:
+          type: string
+          minLength: 1
+          maxLength: 20
+        vin:
+          type: string
+          maxLength: 30
+        mileage:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        owner:
+          type: integer
+    PatchedDiagnoseRequest:
+      type: object
+      properties:
+        diagnosis_notes:
+          type: string
+          minLength: 1
+    PatchedOrderRequest:
+      type: object
+      properties:
+        problem_description:
+          type: string
+          minLength: 1
+        client:
+          type: integer
+        car:
+          type: integer
+    PatchedPartRequest:
+      type: object
+      properties:
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        sku:
+          type: string
+          minLength: 1
+          maxLength: 50
+        min_quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        unit:
+          type: string
+          minLength: 1
+          maxLength: 20
+    PatchedProfileRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+          minLength: 1
+        phone:
+          type: string
+          minLength: 1
+    PatchedReviewRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        comment:
+          type: string
+    PatchedServiceRequest:
+      type: object
+      properties:
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        estimated_hours:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        description:
+          type: string
+        is_active:
+          type: boolean
+    PatchedUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        full_name:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 30
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+    PayMethodEnum:
+      enum:
+      - cash
+      - card
+      - transfer
+      type: string
+      description: |-
+        * `cash` - cash
+        * `card` - card
+        * `transfer` - transfer
+    PayRequest:
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        method:
+          $ref: '#/components/schemas/PayMethodEnum'
+      required:
+      - amount
+      - method
+    Payment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        method:
+          $ref: '#/components/schemas/PaymentMethodEnum'
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+        order:
+          type: integer
+        received_by:
+          type: integer
+      required:
+      - amount
+      - id
+      - method
+      - order
+      - paid_at
+      - received_by
+    PaymentMethodEnum:
+      enum:
+      - cash
+      - card
+      - transfer
+      type: string
+      description: |-
+        * `cash` - Naqd
+        * `card` - Karta
+        * `transfer` - O‘tkazma
+    PaymentRequest:
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        method:
+          $ref: '#/components/schemas/PaymentMethodEnum'
+        order:
+          type: integer
+        received_by:
+          type: integer
+      required:
+      - amount
+      - method
+      - order
+      - received_by
+    ReasonEnum:
+      enum:
+      - purchase
+      - usage
+      - return
+      - correction
+      type: string
+      description: |-
+        * `purchase` - purchase
+        * `usage` - usage
+        * `return` - return
+        * `correction` - correction
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        full_name:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 30
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - username
+    RepairRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        client_name:
+          type: string
+          readOnly: true
+        car_name:
+          type: string
+          readOnly: true
+        description:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/RepairStatusEnum'
+          readOnly: true
+        response_note:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        client:
+          type: integer
+          readOnly: true
+        car:
+          type: integer
+        order:
+          type: integer
+          readOnly: true
+          nullable: true
+        reviewed_by:
+          type: integer
+          readOnly: true
+          nullable: true
+      required:
+      - car
+      - car_name
+      - client
+      - client_name
+      - created_at
+      - description
+      - id
+      - order
+      - response_note
+      - reviewed_by
+      - status
+    RepairRequestRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 1
+        car:
+          type: integer
+      required:
+      - car
+      - description
+    RepairStatusEnum:
+      enum:
+      - PENDING
+      - ACCEPTED
+      - REJECTED
+      type: string
+      description: |-
+        * `PENDING` - Kutilmoqda
+        * `ACCEPTED` - Qabul qilingan
+        * `REJECTED` - Rad etilgan
+    RequestDecisionRequest:
+      type: object
+      properties:
+        response_note:
+          type: string
+    RestockRequest:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+      required:
+      - quantity
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        comment:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        order:
+          type: integer
+          readOnly: true
+        client:
+          type: integer
+          readOnly: true
+      required:
+      - client
+      - created_at
+      - id
+      - order
+      - rating
+    ReviewRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        comment:
+          type: string
+      required:
+      - rating
+    RoleEnum:
+      enum:
+      - admin
+      - manager
+      - mechanic
+      - client
+      type: string
+      description: |-
+        * `admin` - Admin
+        * `manager` - Manager
+        * `mechanic` - Usta
+        * `client` - Mijoz
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        estimated_hours:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+        is_active:
+          type: boolean
+      required:
+      - id
+      - name
+      - price
+    ServiceRequest:
+      type: object
+      properties:
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        estimated_hours:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        description:
+          type: string
+        is_active:
+          type: boolean
+      required:
+      - name
+      - price
+    Stock:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        part_name:
+          type: string
+        change:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        reason:
+          $ref: '#/components/schemas/ReasonEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        part:
+          type: integer
+        order:
+          type: integer
+          nullable: true
+        created_by:
+          type: integer
+      required:
+      - change
+      - created_at
+      - created_by
+      - id
+      - part
+      - part_name
+      - reason
+    TokenObtainPair:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        full_name:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 30
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+      required:
+      - id
+      - username
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        full_name:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 30
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - username
+    WorkLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        mechanic_name:
+          type: string
+          readOnly: true
+        minutes:
+          type: integer
+          maximum: 1440
+          minimum: 0
+          default: 0
+        diagnosis:
+          type: string
+        additional_faults:
+          type: string
+        comment:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        order:
+          type: integer
+          readOnly: true
+        mechanic:
+          type: integer
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - mechanic
+      - mechanic_name
+      - order
+    WorkLogRequest:
+      type: object
+      properties:
+        minutes:
+          type: integer
+          maximum: 1440
+          minimum: 0
+          default: 0
+        diagnosis:
+          type: string
+        additional_faults:
+          type: string
+        comment:
+          type: string
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
